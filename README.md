@@ -10,22 +10,15 @@ python create_workspace.py --workspace_path workspace-dir-path
 ## 3. Data preparation
 
 
-## 4. Clustering
-```console
-python run_clustering.py --workspace_path workspace-dir-path
-```
-
-## 5. Correlations
+## 4. Correlations
 ```console
 python get_correlations.py --workspace_path workspace-dir-path
 ```
 
-## 6. Kaplan-Meier survival prediction
+## 5. Kaplan-Meier survival analysis
 ```console
 python get_survival_prediction.py --workspace_path workspace-dir-path
 ```
 
-## 7. Extraction of the results to PDF format
-```console
-python extract_to_pdf.py --workspace_path workspace-dir-path
-```
+## 6. Glioblastoma subtype prediction
+
