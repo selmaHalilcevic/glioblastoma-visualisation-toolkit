@@ -61,7 +61,7 @@ def main(workspace='../'):
     df = df_pato[
         ['SampleName', 'Side of tumor L, R', 'Ventricle contact (Cortex, cortex+ventricle, ventricle, none)']].merge(
         df_clinical[['SampleName', 'Overall survival', 'Alive']], on='SampleName')
-    df = df.dropna()
+    # df = df.dropna()
     T = df['Overall survival']
     plot_location(T, E=df['Alive'], vals=df['Side of tumor L, R'], workspace_path=workspace_path, show_title=True)
     plot_contact(T, E=df['Alive'], groups=df['Ventricle contact (Cortex, cortex+ventricle, ventricle, none)'],
@@ -80,7 +80,7 @@ def main(workspace='../'):
     df = df_clinical[['SampleName', 'Overall survival', 'Alive']].merge(
         df_gene, on='SampleName'
     )
-    df = df.dropna()
+    # df = df.dropna()
 
     # PLOTS ALL GENES
     for gene in genes:
