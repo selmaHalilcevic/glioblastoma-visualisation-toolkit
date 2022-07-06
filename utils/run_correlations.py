@@ -24,13 +24,13 @@ def plot_mutations(df, wp):
     for key in combinations:
         plot_mutations_with_combinations(wp, df=df_new, genes=combinations[key][0],
                                          filename=key, img_size=combinations[key][1],
-                                         add_cols=cols_with_mutations_dummy_vars, col_map='Blues', add_title=True)
+                                         add_cols=cols_with_mutations_dummy_vars, col_map='Blues', add_title=False)
         data = ['Overall survival'] + loc_col_with_sample_no + combinations[key][0]
         f = re.sub("[_]", ' ', key).capitalize()
         get_heatmaps(wp, df_loc[data],
                      img_name=os.path.join('gene combinations and tumor location', f'tumor_location_{key}'),
-                     map='Blues', annotations=True, img_size=combinations[key][1],
-                     vmin=-1, vmax=1 , title=f'Tumor location and {f}')
+                     img_size=combinations[key][1],
+                     vmin=-1, vmax=1)# , title=f'Tumor location and {f}')
 
 
 def plot_corr_combinations(df):
@@ -39,7 +39,7 @@ def plot_corr_combinations(df):
         f = re.sub("[_]", ' ', key).capitalize()
         get_heatmaps(workspace_path, data=df[['Overall survival'] + combinations[key][0]],
                      img_name=os.path.join('gene combinations', key),
-                     img_size=combinations[key][1], vmin=-1 , title=f)
+                     img_size=combinations[key][1], vmin=-1)# , title=f)
 
     # Correlations between two combinations
     for group in groups:
@@ -48,7 +48,7 @@ def plot_corr_combinations(df):
         v_diff = h_diff
         name = f"{group[0]}_LEFT_and_{group[1]}_RIGHT"
         plot_combinations(workspace_path, data, h_diff, v_diff,
-                          img_name=name, img_size=group[2], add_title=True)
+                          img_name=name, img_size=group[2], add_title=False)
 
     # Plot correlations between gbm subtypes and overall survival
     data = ['Overall survival']
@@ -62,7 +62,7 @@ def plot_corr_combinations(df):
         prev = len(subtypes[key]) + 1
         names += "_"
     plot_combinations(workspace_path, data=df[data], h_diff=diff, v_diff=diff, img_name=f'tcga_subtypes_{names}',
-                      img_size=(18, 14), multiple=True, color=['black'], add_title=True)
+                      img_size=(18, 14), multiple=True, color=['black'], add_title=False)
 
 
 def main(workspace='../'):

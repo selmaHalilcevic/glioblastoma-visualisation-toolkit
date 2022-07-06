@@ -11,6 +11,7 @@ from lifelines.plotting import add_at_risk_counts
 from lifelines.statistics import logrank_test, pairwise_logrank_test
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.offsetbox import AnchoredText
+plt.rcParams['figure.dpi'] = 500
 
 warnings.filterwarnings("ignore")
 

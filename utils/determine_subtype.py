@@ -2,8 +2,10 @@ import os
 import pickle
 import warnings
 
+warnings.filterwarnings('always')
 import graphviz
 import matplotlib.pyplot as plt
+plt.rcParams['figure.dpi'] = 300
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -11,12 +13,13 @@ import seaborn as sns
 from dtreeviz.trees import dtreeviz
 from sklearn import tree
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import make_scorer, roc_auc_score
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score, cross_validate
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, _tree
 from sklearn import metrics
 
-from utils.variables import biomarkers_for_subtype_definition as features
+from utils.variables import biomarkers_for_subtype_definition as features, subtype_target_names
 
 warnings.filterwarnings("ignore")
 
@@ -55,9 +58,9 @@ def get_linear_combinations(pca_comp, index):
         f.write(f"{s}\n")
     f.write(
         '\n......................................................................................................\n\n')
-    f.write('Sorted loadings for the first three principal components\n\n')
+    f.write('Sorted loadings by absolute value for the first three principal components\n\n')
     for i in range(1, 4):
-        vals = df[f'PC {i}'].sort_values(ascending=False).to_string()
+        vals = df[f'PC {i}'].abs().sort_values(ascending=False).round(3).to_string()
         f.write(f'\nPC {i} loadings:\n\n')
         f.write(vals)
         f.write("\n")
@@ -196,20 +199,37 @@ def decision_tree(X, y, feature_names, subtypes, depth=None):
     com = sorted(list(set(list(zip(LabelEncoder().fit_transform(y), list(subtypes))))))
     target_names = [i[1] for i in com]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=109)
-
     clf = DecisionTreeClassifier(criterion="entropy", splitter="best", max_depth=depth,
                                  random_state=0)
-    clf.fit(X_train, y_train)
+    kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=0)
+    print('Measure\t| mean \t | std')
+    scores = cross_val_score(clf, X, y, scoring='accuracy', cv=kfold, n_jobs=-1)
+    print('Accuracy: %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='precision_macro', cv=kfold, n_jobs=-1)
+    print('Precision (macro): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='recall_macro', cv=kfold, n_jobs=-1)
+    print('Recall (macro): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='f1_macro', cv=kfold, n_jobs=-1)
+    print('F1-score (macro): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='precision_weighted', cv=kfold, n_jobs=-1)
+    print('Precision (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='recall_weighted', cv=kfold, n_jobs=-1)
+    print('Recall (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    scores = cross_val_score(clf, X, y, scoring='f1_weighted', cv=kfold, n_jobs=-1)
+    print('F1-score (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
+
+    clf.fit(X, y)
+    print('auc macro', roc_auc_score(y, clf.predict_proba(X), multi_class='ovr', average='macro'))
+    print('auc weighted', roc_auc_score(y, clf.predict_proba(X), multi_class='ovr', average='weighted'))
+
     modelname = 'predict_subtypes_dt_model.sav'
     pickle.dump(clf, open(os.path.join(workspace_path, modelname), 'wb'))
-    print(y_test)
-
-    # y_pred = clf.predict(X_test)
-    # print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
-    # print("Precision:", metrics.precision_score(y_test, y_pred, average='micro'))
-    # print("Recall:", metrics.recall_score(y_test, y_pred, average='micro'))
-    # print("F1-score:", metrics.f1_score(y_test, y_pred, average='micro'))
 
     text_representation = tree.export_text(clf, feature_names=feature_names)
     print(text_representation)
@@ -255,7 +275,7 @@ def decision_tree(X, y, feature_names, subtypes, depth=None):
     graph.view()
 
     # Draw a decision tree with histograms
-    viz = dtreeviz(clf, X_train, y_train,
+    viz = dtreeviz(clf, X, y,
                    target_name="TCGA SUBTYPE",
                    feature_names=feature_names,
                    class_names=target_names,
@@ -267,11 +287,13 @@ def decision_tree(X, y, feature_names, subtypes, depth=None):
 
 def perform_subtype_definition(data, true_labels, no_components, no_components_interest,
                                plot_exp_var_ratio, plot_pca_3D, depth=2):
+
     data_scaled = StandardScaler().fit_transform(data)
     pca = PCA(n_components=no_components)
     pca.fit(data_scaled)
     print("Explained variance ratio for 3 components: ", pca.explained_variance_ratio_[:3].sum() * 100)
     print("Explained variance ratio for 4 components: ", pca.explained_variance_ratio_[:4].sum() * 100)
+
 
     if plot_exp_var_ratio:
         fig, ax = plt.subplots()
@@ -287,10 +309,11 @@ def perform_subtype_definition(data, true_labels, no_components, no_components_i
         # plt.show()
         plt.close(fig)
 
+
+
     pca = PCA(n_components=no_components_interest)
     pca.fit(data_scaled)
     data_scaled = pca.transform(data_scaled)
-
     get_linear_combinations(pca.components_, data.columns)
     get_correlations_between_variables_and_pca(pca.components_, pca.explained_variance_, index=data.columns)
     feature_names = [f"PC {i + 1}" for i in range(no_components_interest)]

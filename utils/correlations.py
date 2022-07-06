@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy import stats
+plt.rcParams['figure.dpi'] = 500
+# plt.rcParams['font.size'] = 12
+
 
 
 def get_pvalues_significance_annotations(r_df, n):

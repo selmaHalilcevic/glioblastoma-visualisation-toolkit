@@ -63,17 +63,17 @@ def main(workspace='../'):
         df_clinical[['SampleName', 'Overall survival', 'Alive']], on='SampleName')
     # df = df.dropna()
     T = df['Overall survival']
-    plot_location(T, E=df['Alive'], vals=df['Side of tumor L, R'], workspace_path=workspace_path, show_title=True)
-    plot_contact(T, E=df['Alive'], groups=df['Ventricle contact (Cortex, cortex+ventricle, ventricle, none)'],
-                 workspace_path=workspace_path, show_title=True)
-
-    plot_age(T=df_clinical['Overall survival'], E=df_clinical['Alive'],
-             vals=df_clinical['Age at time of 1st diagnosis'], show_title=True, at_risk=True, wp=workspace_path)
-    plot_kps(T=df_clinical['Overall survival'], E=df_clinical['Alive'], post_kps=df_clinical['Post operative KPS'],
-             pre_kps=df_clinical['Pre-operative KPS'],
-             wp=workspace_path, show_title=True, at_risk=True)
-    plot_gender(T=df_clinical['Overall survival'], E=df_clinical['Alive'], vals=df_clinical['Gender (m/f)'],
-                workspace_path=workspace_path, show_censors=True, at_risk=True, show_title=True)
+    # plot_location(T, E=df['Alive'], vals=df['Side of tumor L, R'], workspace_path=workspace_path, show_title=True)
+    # plot_contact(T, E=df['Alive'], groups=df['Ventricle contact (Cortex, cortex+ventricle, ventricle, none)'],
+    #              workspace_path=workspace_path, show_title=True)
+    #
+    # plot_age(T=df_clinical['Overall survival'], E=df_clinical['Alive'],
+    #          vals=df_clinical['Age at time of 1st diagnosis'], show_title=True, at_risk=True, wp=workspace_path)
+    # plot_kps(T=df_clinical['Overall survival'], E=df_clinical['Alive'], post_kps=df_clinical['Post operative KPS'],
+    #          pre_kps=df_clinical['Pre-operative KPS'],
+    #          wp=workspace_path, show_title=True, at_risk=True)
+    # plot_gender(T=df_clinical['Overall survival'], E=df_clinical['Alive'], vals=df_clinical['Gender (m/f)'],
+    #             workspace_path=workspace_path, show_censors=True, at_risk=True, show_title=True)
 
     # TODO: COMBINATIONS
 
@@ -85,19 +85,19 @@ def main(workspace='../'):
     # PLOTS ALL GENES
     for gene in genes:
         plot_genes(gene, T=df['Overall survival'], E=df['Alive'], vals=df[gene], wp=workspace_path, show_censors=True,
-                   show_title=True, at_risk=True)
+                   show_title=False, at_risk=True)
 
-    # Plots all genes thresholded by quartiles in one pdf file
-    plot_combinations(T=df['Overall survival'], genes=genes, df=df, rows=2, cols=3,
-                      workspace_path=workspace_path,
-                      filename='all_genes', show_censors=True, at_risk=False)
-
-    # Plots every combination to a single pdf file
-    for key in combinations:
-        genes_ = combinations[key][0]
-        plot_combinations(T=df['Overall survival'], genes=genes_, df=df, rows=2, cols=3,
-                          workspace_path=workspace_path,
-                          filename=key, show_censors=True, at_risk=True)
+    # # Plots all genes thresholded by quartiles in one pdf file
+    # plot_combinations(T=df['Overall survival'], genes=genes, df=df, rows=2, cols=3,
+    #                   workspace_path=workspace_path,
+    #                   filename='all_genes', show_censors=True, at_risk=False)
+    #
+    # # Plots every combination to a single pdf file
+    # for key in combinations:
+    #     genes_ = combinations[key][0]
+    #     plot_combinations(T=df['Overall survival'], genes=genes_, df=df, rows=2, cols=3,
+    #                       workspace_path=workspace_path,
+    #                       filename=key, show_censors=True, at_risk=True)
 
 
 if __name__ == "__main__":
