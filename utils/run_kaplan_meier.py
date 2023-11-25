@@ -12,7 +12,7 @@ from utils.variables import genes, combinations
 workspace_path = "./"
 
 
-def plot_genes(gene_name, T, E, vals, wp, show_censors=True, show_title=True, at_risk=True):
+def plot_genes(gene_name, T, E, vals, wp, show_censors=True, show_title=False, at_risk=True):
     quartiles = {0.25: 'Q1', 0.50: 'Q2', 0.75: 'Q3'}
     img_name = os.path.join('All genes', gene_name)
     for q in quartiles:
@@ -21,7 +21,7 @@ def plot_genes(gene_name, T, E, vals, wp, show_censors=True, show_title=True, at
                           show_plot_title=show_title, at_risk=at_risk, threshold_three_decimals=True)
 
 
-def plot_age(T, E, vals, wp, show_censors=True, show_title=True, at_risk=False):
+def plot_age(T, E, vals, wp, show_censors=True, show_title=False, at_risk=False):
     quartiles = {0.25: 'Q1', 0.50: 'Q2', 0.75: 'Q3'}
     img_name = os.path.join('Age, gender, KPS, location, subtypes', 'age_at_the_time_of_1st_diagnosis')
     for q in quartiles:
@@ -30,7 +30,7 @@ def plot_age(T, E, vals, wp, show_censors=True, show_title=True, at_risk=False):
                           show_plot_title=show_title, at_risk=at_risk)
 
 
-def plot_kps(T, E, post_kps, pre_kps, wp, show_censors=True, show_title=True, at_risk=False):
+def plot_kps(T, E, post_kps, pre_kps, wp, show_censors=True, show_title=False, at_risk=False):
     quartiles = {0.25: 'Q1', 0.50: 'Q2', 0.75: 'Q3'}
     for q in quartiles:
         plot_kaplan_meier(pre_kps, T, E, percentile=q, var_name='Pre-KPS',
@@ -52,39 +52,39 @@ def main(workspace='../'):
     df_gene = pd.read_csv(os.path.join(workspace_path, 'data', 'gene_expression_dataset.csv'), sep=';')
     df_clinical = pd.read_csv(os.path.join(workspace_path, 'data', 'clinical_dataset.csv'), sep=';')
     df_pato = pd.read_csv(os.path.join(workspace_path, 'data', 'pathohistological_dataset.csv'), sep=';')
-    df = df_gene[['SampleName', 'Subtype']].merge(df_clinical[['SampleName', 'Overall survival', 'Alive']],
+    df = df_gene[['SampleName', 'Subtype']].merge(df_clinical[['SampleName', 'Overall survival', 'Dead']],
                                                   on='SampleName')
     df = df.dropna()
     T = df['Overall survival']
-    plot_subtypes(T, E=df['Alive'], groups=df['Subtype'], show_title=True, at_risk=True, workspace_path=workspace_path)
+    plot_subtypes(T, E=df['Dead'], groups=df['Subtype'], show_title=False, at_risk=True, workspace_path=workspace_path)
 
     df = df_pato[
         ['SampleName', 'Side of tumor L, R', 'Ventricle contact (Cortex, cortex+ventricle, ventricle, none)']].merge(
-        df_clinical[['SampleName', 'Overall survival', 'Alive']], on='SampleName')
-    # df = df.dropna()
+        df_clinical[['SampleName', 'Overall survival', 'Dead']], on='SampleName')
+
     T = df['Overall survival']
-    # plot_location(T, E=df['Alive'], vals=df['Side of tumor L, R'], workspace_path=workspace_path, show_title=True)
-    # plot_contact(T, E=df['Alive'], groups=df['Ventricle contact (Cortex, cortex+ventricle, ventricle, none)'],
-    #              workspace_path=workspace_path, show_title=True)
+    #plot_location(T, E=df['Dead'], vals=df['Side of tumor L, R'], workspace_path=workspace_path, show_title=False)
+    # plot_contact(T, E=df['Dead'], groups=df['Ventricle contact (Cortex, cortex+ventricle, ventricle, none)'],
+    #              workspace_path=workspace_path, show_title=False)
     #
-    # plot_age(T=df_clinical['Overall survival'], E=df_clinical['Alive'],
-    #          vals=df_clinical['Age at time of 1st diagnosis'], show_title=True, at_risk=True, wp=workspace_path)
-    # plot_kps(T=df_clinical['Overall survival'], E=df_clinical['Alive'], post_kps=df_clinical['Post operative KPS'],
+    # plot_age(T=df_clinical['Overall survival'], E=df_clinical['Dead'],
+    #          vals=df_clinical['Age at time of 1st diagnosis'], show_title=False, at_risk=True, wp=workspace_path)
+    # plot_kps(T=df_clinical['Overall survival'], E=df_clinical['Dead'], post_kps=df_clinical['Post operative KPS'],
     #          pre_kps=df_clinical['Pre-operative KPS'],
-    #          wp=workspace_path, show_title=True, at_risk=True)
-    # plot_gender(T=df_clinical['Overall survival'], E=df_clinical['Alive'], vals=df_clinical['Gender (m/f)'],
-    #             workspace_path=workspace_path, show_censors=True, at_risk=True, show_title=True)
+    #          wp=workspace_path, show_title=False, at_risk=True)
+    # plot_gender(T=df_clinical['Overall survival'], E=df_clinical['Dead'], vals=df_clinical['Gender (m/f)'],
+    #             workspace_path=workspace_path, show_censors=True, at_risk=True, show_title=False)
 
     # TODO: COMBINATIONS
 
-    df = df_clinical[['SampleName', 'Overall survival', 'Alive']].merge(
-        df_gene, on='SampleName'
-    )
+    df = df_clinical[['SampleName', 'Overall survival', 'Dead']].merge(
+         df_gene, on='SampleName'
+     )
     # df = df.dropna()
 
     # PLOTS ALL GENES
     for gene in genes:
-        plot_genes(gene, T=df['Overall survival'], E=df['Alive'], vals=df[gene], wp=workspace_path, show_censors=True,
+        plot_genes(gene, T=df['Overall survival'], E=df['Dead'], vals=df[gene], wp=workspace_path, show_censors=True,
                    show_title=False, at_risk=True)
 
     # # Plots all genes thresholded by quartiles in one pdf file
