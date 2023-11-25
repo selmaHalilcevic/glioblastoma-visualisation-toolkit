@@ -20,7 +20,7 @@ def plot_mutations(df, wp):
         loc_col_with_sample_no.append(new_col_name)
 
     plot_mutations_with_location(df_loc, mutation_cols=cols_with_mutations_dummy_vars,
-                                 location_cols=cols_location, wp=wp, img_size=(15, 12), add_title=True)
+                                 location_cols=cols_location, wp=wp, img_size=(15, 12), add_title=False)
     for key in combinations:
         plot_mutations_with_combinations(wp, df=df_new, genes=combinations[key][0],
                                          filename=key, img_size=combinations[key][1],

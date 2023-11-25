@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy import stats
-plt.rcParams['figure.dpi'] = 500
+plt.rcParams['figure.dpi'] = 300
 # plt.rcParams['font.size'] = 12
 
 
@@ -49,14 +49,16 @@ def get_heatmaps(workspace_path, data, img_name, img_size=(10, 6), vmin=-1, vmax
     ax.set_xticklabels(
         ax.get_xticklabels(),
         rotation=45,
-        horizontalalignment='right'
+        horizontalalignment='right',
+        fontsize = 20
     )
     ax.set_yticklabels(
         ax.get_yticklabels(),
-        rotation=0
+        rotation=0,
+        fontsize = 20
     )
     if title != None: plt.title(f'{title} - Correlations')
-    plt.savefig(os.path.join(workspace_path, 'results', 'correlations', f'{img_name}.png'), bbox_inches='tight')
+    plt.savefig(os.path.join(workspace_path, 'results', 'correlations', f'{img_name}.pdf'), bbox_inches='tight')
     plt.close()
 
 
@@ -101,7 +103,7 @@ def split_location_to_dummy_vars(df, col_name_loc, col_name_contact):
         df = df.dropna()
     df_side = get_dummy_variables(df, column_name=col_name_loc,
                                   new_columns=list(set(list(df[col_name_loc]))),
-                                  mutation='Tumor Side')
+                                  mutation='Tumour Side')
 
     new_cols_side = [c for c in df_side.columns if c not in prev_cols and 'bill' not in c]
     df = df[prev_cols]
@@ -204,7 +206,7 @@ def plot_mutations_with_location(df, mutation_cols=None, location_cols=None, wp=
             n_with_sample_no.append(new_col_name)
         data = ['Overall survival'] + n_with_sample_no + loc_col_with_sample_no
         mut = re.sub("[ ?.!/;:]", '_', m)
-        title = None if not add_title else f'Tumor location and {mut} mutation'
+        title = None if not add_title else f'Tumour location and {mut} mutation'
         get_heatmaps(wp, df[data],
                      img_name=os.path.join('mutations and tumor location', f'tumor_location_{mut}'),
                      img_size=img_size, vmin=-1, vmax=1, title=title)
@@ -228,7 +230,7 @@ def plot_mutations_with_location(df, mutation_cols=None, location_cols=None, wp=
         df = df.rename(columns={old_col_name: new_col_name})
         n_with_sample_no.append(new_col_name)
     data = ['Overall survival'] + n_with_sample_no + loc_col_with_sample_no
-    title = None if not add_title else f'Tumor location and IDH1 mutation'
+    title = None if not add_title else f'Tumour location and IDH1 mutation'
     get_heatmaps(wp, df[data],
                  img_name=os.path.join('mutations and tumor location', f'tumor_location_IDH1_mutations'),
                  img_size=img_size, vmin=-1, vmax=1, title=title)
@@ -250,11 +252,13 @@ def plot_combinations(workspace_path, data, h_diff, v_diff, img_name,
         ax.set_xticklabels(
             ax.get_xticklabels(),
             rotation=45,
-            horizontalalignment='right'
+            horizontalalignment='right',
+            fontsize = 20
         )
         ax.set_yticklabels(
             ax.get_yticklabels(),
-            rotation=0
+            rotation=0,
+            fontsize = 20
         )
     else:
         if len(h_diff) == len(v_diff):
@@ -265,14 +269,16 @@ def plot_combinations(workspace_path, data, h_diff, v_diff, img_name,
                 ax.set_xticklabels(
                     ax.get_xticklabels(),
                     rotation=45,
-                    horizontalalignment='right'
+                    horizontalalignment='right',
+                    fontsize = 20
                 )
                 ax.set_yticklabels(
                     ax.get_yticklabels(),
-                    rotation=0
+                    rotation=0,
+                    fontsize = 20
                 )
     f = re.sub("[ ?.!;:_]", ' ', img_name)
     title = None if not add_title else f'{f.capitalize()}'
-    plt.savefig(os.path.join(workspace_path, 'results', 'correlations', 'gene markers combinations', f'{img_name}.png'),
+    plt.savefig(os.path.join(workspace_path, 'results', 'correlations', 'gene markers combinations', f'{img_name}.pdf'),
                 bbox_inches='tight')
     plt.close()

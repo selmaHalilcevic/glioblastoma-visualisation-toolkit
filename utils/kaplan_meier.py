@@ -11,7 +11,7 @@ from lifelines.plotting import add_at_risk_counts
 from lifelines.statistics import logrank_test, pairwise_logrank_test
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.offsetbox import AnchoredText
-plt.rcParams['figure.dpi'] = 500
+plt.rcParams['figure.dpi'] = 300
 
 warnings.filterwarnings("ignore")
 
@@ -104,7 +104,7 @@ def plot_kaplan_meier(vals, T, E, percentile, var_name, img_name, workspace_path
     elif percentile == 0.75:
         q = 3
     if show_plot_title: plt.title(f"{var_name}, Q{q}")
-    plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves', f"{img_name}.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves', f"{img_name}.pdf"), bbox_inches='tight')
     plt.close(fig)
     matplotlib.rcParams.update({"font.size": 12})
 
@@ -159,7 +159,7 @@ def plot_subtypes(T, E, groups, show_censors=True, at_risk=True, show_title=Fals
     ax.add_artist(at)
     if show_title: plt.title('Kaplan-Meier Survival Prediction Based on Four TCGA Subtypes')
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves',
-                             'Age, gender, KPS, location, subtypes', "four_tcga_subtypes.png"), bbox_inches='tight')
+                             'Age, gender, KPS, location, subtypes', "four_tcga_subtypes.pdf"), bbox_inches='tight')
     plt.close(fig)
     matplotlib.rcParams.update({"font.size": 9})
 
@@ -187,7 +187,7 @@ def plot_subtypes(T, E, groups, show_censors=True, at_risk=True, show_title=Fals
     if show_title: plt.title('CL and MIX TCGA Subtypes')
 
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves',
-                             'Age, gender, KPS, location, subtypes', "CL_and_MIX_tcga_subtypes.png"),
+                             'Age, gender, KPS, location, subtypes', "CL_and_MIX_tcga_subtypes.pdf"),
                 bbox_inches='tight')
     plt.close(fig)
     matplotlib.rcParams.update({"font.size": 12})
@@ -510,7 +510,7 @@ def plot_location(T, E, vals, workspace_path, at_risk=True, show_title=False):
             elif item == 'Right':
                 t.append('R')
             elif item == 'Left and right':
-                t.append('L, R')
+                t.append('LR')
             elif item == 'bill':
                 t.append('bill')
         results2_df[col] = t
@@ -519,9 +519,9 @@ def plot_location(T, E, vals, workspace_path, at_risk=True, show_title=False):
 
     at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
     ax.add_artist(at)
-    if show_title: plt.title('Tumor Location')
+    if show_title: plt.title('Tumour Location')
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves',
-                             'Age, gender, KPS, location, subtypes', "location.png"), bbox_inches='tight')
+                             'Age, gender, KPS, location, subtypes', "location.pdf"), bbox_inches='tight')
     plt.close(fig)
     matplotlib.rcParams.update({"font.size": 12})
 
@@ -583,7 +583,7 @@ def plot_contact(T, E, groups, workspace_path, at_risk=True, show_title=None):
     ax.add_artist(at)
     if show_title: plt.title('Ventricle contact')
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves',
-                             'Age, gender, KPS, location, subtypes', "ventricle_contact.png"), bbox_inches='tight')
+                             'Age, gender, KPS, location, subtypes', "ventricle_contact.pdf"), bbox_inches='tight')
     plt.close(fig)
 
     fig, ax = plt.subplots()  # figsize=(5,5))
@@ -614,7 +614,7 @@ def plot_contact(T, E, groups, workspace_path, at_risk=True, show_title=None):
     if show_title: plt.title('Ventricle contact')
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves',
                              'Age, gender, KPS, location, subtypes',
-                             "ventricle contact - ventricle and cortex_ventricle combined.png"),
+                             "ventricle contact - ventricle and cortex_ventricle combined.pdf"),
                 bbox_inches='tight')
     plt.close(fig)
 
@@ -676,6 +676,6 @@ def plot_gender(T, E, vals, workspace_path, show_censors=True, at_risk=False, sh
     ax.add_artist(at)
     if show_title: plt.title('Gender')
     plt.savefig(os.path.join(workspace_path, 'results', 'kaplan_meier_curves', 'Age, gender, KPS, location, subtypes',
-                             "gender.png"), bbox_inches='tight')
+                             "gender.pdf"), bbox_inches='tight')
     plt.close(fig)
     matplotlib.rcParams.update({"font.size": 12})

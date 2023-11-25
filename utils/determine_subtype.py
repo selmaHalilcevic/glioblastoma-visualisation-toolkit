@@ -215,18 +215,8 @@ def decision_tree(X, y, feature_names, subtypes, depth=None):
     scores = cross_val_score(clf, X, y, scoring='f1_macro', cv=kfold, n_jobs=-1)
     print('F1-score (macro): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
 
-    scores = cross_val_score(clf, X, y, scoring='precision_weighted', cv=kfold, n_jobs=-1)
-    print('Precision (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
-
-    scores = cross_val_score(clf, X, y, scoring='recall_weighted', cv=kfold, n_jobs=-1)
-    print('Recall (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
-
-    scores = cross_val_score(clf, X, y, scoring='f1_weighted', cv=kfold, n_jobs=-1)
-    print('F1-score (weighted): %.3f (%.3f)' % (np.mean(scores), np.std(scores)))
-
     clf.fit(X, y)
     print('auc macro', roc_auc_score(y, clf.predict_proba(X), multi_class='ovr', average='macro'))
-    print('auc weighted', roc_auc_score(y, clf.predict_proba(X), multi_class='ovr', average='weighted'))
 
     modelname = 'predict_subtypes_dt_model.sav'
     pickle.dump(clf, open(os.path.join(workspace_path, modelname), 'wb'))
