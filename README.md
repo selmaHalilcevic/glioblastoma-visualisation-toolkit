@@ -28,9 +28,26 @@ After the workspace is created, user must prepare datasets to be used by the too
 - ``` pathohistological_dataset.csv ```
 - ``` gene_expressions_dataset.csv ```
 
-Every dataset must contain feature ``` SampleName ```, which is a unique identifier for glioblastoma samples and it is a feature through which we merge datasets in toolkit. Every dataset uses semicolon, ``` ;```, as delimeter.
+Every dataset must contain feature ``` SampleName ```, which is a unique identifier for glioblastoma samples and it is a feature through which we merge datasets in toolkit. Every dataset uses semicolon, ``` ;```, as a delimeter.
 
 ### Clinical dataset
+Clinical dataset contains neuroclinical information of glioblastoma patients. Variables that should be in the clinical dataset are listed below in a table.
+
+| Variable                      | Type              | Additional information                                                                                                    |   |   |
+|-------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------|---|---|
+| SampleName                    | categorical       | Unique identifier.                                                                                                        |   |   |
+| Gender (m/f)                  | categorical       |                                                                                                                           |   |   |
+| Date of birth                 | categorical       |                                                                                                                           |   |   |
+| Date of Diagnosis (first MRI) | categorical       |                                                                                                                           |   |   |
+| death_date                    | categorical       |                                                                                                                           |   |   |
+| Dead                          | numerical; binary | Dead (1-dead, 0-censored) at the time <br>the study was finished.                                                         |   |   |
+| Overall survival              | numerical; int    | Time in months between the date of the first <br>diagnosis using magnetic resonance imagining (MRI) <br>and a death date. |   |   |
+| Age at time of 1st diagnosis  | numerical; int    |                                                                                                                           |   |   |
+| Pre-operative KPS             | numerical; int    | Karnofsky performance status (KPS)                                                                                        |   |   |
+| Post operative KPS            | numerical; int    | Karnofsky performance status (KPS)                                                                                        |   |   |
+| Tumor side                    | categorical       |                                                                                                                           |   |   |
+| Ventricle contact             | categorical       |                                                                                                                           |   |   |
+
 ### Pathohistological dataset
 ### Gene expressions dataset
 
