@@ -28,12 +28,47 @@ After the workspace is created, user must prepare datasets to be used by the too
 - ``` pathohistological_dataset.csv ```
 - ``` gene_expressions_dataset.csv ```
 
-Every dataset must contain feature ``` SampleName ```, which is a unique identifier for glioblastoma samples and it is a feature through which we merge datasets in toolkit. Every dataset uses semicolon, ``` ;```, as delimeter.
+Every dataset must contain feature ``` SampleName ```, which is a unique identifier for glioblastoma samples and it is a feature through which we merge datasets in toolkit. Every dataset uses semicolon, ``` ;```, as a delimeter.
 
 ### Clinical dataset
-### Pathohistological dataset
-### Gene expressions dataset
+Clinical dataset contains neuroclinical information of glioblastoma patients. Variables that should be in the clinical dataset are listed below in a table.
+| Variable                      | Type              | Additional information                                                                                                    |
+|-------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------|
+| SampleName                    | categorical       | Unique identifier.                                                                                                        |
+| Gender (m/f)                  | categorical       |                                                                                                                           |
+| Date of birth                 | categorical       |                                                                                                                           |
+| Date of Diagnosis (first MRI) | categorical       |                                                                                                                           |
+| death_date                    | categorical       |                                                                                                                           |
+| Dead                          | numerical; binary | Dead (1-dead, 0-censored) at the time <br>the study was finished.                                                         |
+| Overall survival              | numerical; int    | Time in months between the date of the first <br>diagnosis using magnetic resonance imagining (MRI) <br>and a death date. |
+| Age at time of 1st diagnosis  | numerical; int    |                                                                                                                           |
+| Pre-operative KPS             | numerical; int    | Karnofsky performance status (KPS)                                                                                        |
+| Post operative KPS            | numerical; int    | Karnofsky performance status (KPS)                                                                                        |
+| Tumor side                    | categorical       |                                                                                                                           |
+| Ventricle contact             | categorical       |                                                                                                                           |
 
+### Pathohistological dataset
+Pathohistological dataset contains data about mutation tests performed on glioblastoma tissue samples. Variables that should be in the clinical dataset are listed below in a table. Each variable that represents one of the mutations or molecular alterations, can be identified, not identified or not tested.
+| Variable                  |
+|---------------------------|
+| Molecular characteristics |
+| IDH1                      |
+| IDH R132H                 |
+| EGFR                      |
+| BRAF                      |
+| TERT                      |
+| ATRX                      |
+| p53                       |
+| Co-deletion 1p/19q        |
+| MGMT methylation          |
+
+### Gene expressions dataset
+Gene expressions dataset consists of a variable SampleName to reference samples, 40 gene expression variables and corresponding molecular or TCGA subtype, variable Subtype.
+
+|                             | 40 gene variables and values of Subtype variable:                                                                                                                                                                                                                                         |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Gene expression biomarkers: | TUFM, TRPV1, TRIM28, THBS1, TGFB1, STMN4, SOX10, S100A4, P2RX7, KCNF1,<br>GPR55, ERBB3, DAB2, CST7, COL1A2, COL1A, CNR1, CD9, CCR5, CCL5, <br>ACSBG1, VIM, STAT3, SOX2, SNAI1, PROM1, OLIG2, OCT4, NOTCH, NF-KB,<br>ID1, GFAP, CHI3L1, CEBPA, CDH1, CD44, CD15, CCR3, BETATUBULIN, ALYREF |
+| Subtype:                    | CL, MES, MIX, PN                                                                                                                                                                                                                                                                          |
 
 ## 4. Correlations
 To obtain correlations between molecular characterics, tumour location, gene expression biomarkers, and glioblastoma subtypes run the following command:
